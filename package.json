@@ -1,6 +1,6 @@
 {
-  "name": "platzi-exchange",
-  "version": "0.1.0",
+  "name": "Ernerdo-exchange",
+  "version": "0.1.4",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
