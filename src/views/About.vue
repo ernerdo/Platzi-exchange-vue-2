@@ -16,7 +16,6 @@
 {
   "es": {
     "Project to obtain the prices of the most important cryptocurrencies through the Coincap REST API.": "Proyecto para obtener las cotizaciones de las cryptomonedas mas importantes a traves de la API REST de Coincap."
-
   }
 }
 </i18n>
