@@ -5,29 +5,27 @@
   >
     <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
 
-    <p  v-show="!isLoading">
-      <slot >
-
-      </slot>
+    <p v-show="!isLoading">
+      <slot> </slot>
     </p>
   </button>
 </template>
 
 <script>
 export default {
-  name: 'PxButton',
+  name: "PxButton",
 
   props: {
     isLoading: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   methods: {
     buttonClick() {
-      this.$emit('custom-click')
-    }
-  }
-}
+      this.$emit("custom-click");
+    },
+  },
+};
 </script>

@@ -7,9 +7,7 @@
       <div class="flex flex-col sm:flex-row justify-around items-center">
         <div class="flex flex-col items-center">
           <img
-            :src="
-              `https://static.coincap.io/assets/icons/${asset.symbol.toLowerCase()}@2x.png`
-            "
+            :src="`https://static.coincap.io/assets/icons/${asset.symbol.toLowerCase()}@2x.png`"
             :alt="asset.name"
             class="w-20 h-20 mr-5"
           />
@@ -22,27 +20,27 @@
         <div class="my-10 flex flex-col">
           <ul>
             <li class="flex justify-between">
-              <b class="text-gray-600 mr-10 uppercase">Ranking</b>
+              <b class="text-gray-600 mr-10 uppercase">{{ $t('Ranking') }}</b>
               <span>#{{ asset.rank }}</span>
             </li>
             <li class="flex justify-between">
-              <b class="text-gray-600 mr-10 uppercase">Precio actual</b>
+              <b class="text-gray-600 mr-10 uppercase">{{ $t('Actual Price') }}</b>
               <span>{{ asset.priceUsd | dollar }}</span>
             </li>
             <li class="flex justify-between">
-              <b class="text-gray-600 mr-10 uppercase">Precio más bajo</b>
+              <b class="text-gray-600 mr-10 uppercase">{{ $t('Lowest Price') }}</b>
               <span>{{ min | dollar }}</span>
             </li>
             <li class="flex justify-between">
-              <b class="text-gray-600 mr-10 uppercase">Precio más alto</b>
+              <b class="text-gray-600 mr-10 uppercase">{{ $t('Hightest Price') }}</b>
               <span>{{ max | dollar }}</span>
             </li>
             <li class="flex justify-between">
-              <b class="text-gray-600 mr-10 uppercase">Precio Promedio</b>
+              <b class="text-gray-600 mr-10 uppercase">{{ $t('Average Price') }}</b>
               <span>{{ avg | dollar }}</span>
             </li>
             <li class="flex justify-between">
-              <b class="text-gray-600 mr-10 uppercase">Variación 24hs</b>
+              <b class="text-gray-600 mr-10 uppercase"> {{$t('Variation 24hs')}}</b>
               <span>{{ asset.changePercent24Hr | percent }}</span>
             </li>
           </ul>
@@ -52,23 +50,25 @@
           <button
             @click="toggleConverter"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          >{{
-            fromUsd?`USD a ${asset.symbol}`:`${asset.symbol} a USD`
-          }}</button>
+          >
+            {{ fromUsd ? `USD a ${asset.symbol}` : `${asset.symbol} a USD` }}
+          </button>
 
           <div class="flex flex-row my-5">
             <label class="w-full" for="convertValue">
               <input
-              v-model="convertValue"
+                v-model="convertValue"
                 id="convertValue"
                 type="number"
                 class="text-center bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
-                :placeholder="`valor en ${fromUsd ? 'USD' :asset.symbol}`"
+                :placeholder="`${$t('Value in')} ${fromUsd ? 'USD' : asset.symbol}`"
               />
             </label>
           </div>
 
-          <span class="text-xl"> {{convertResult}} {{fromUsd?asset.symbol : 'USD'}}</span>
+          <span class="text-xl">
+            {{ convertResult }} {{ fromUsd ? asset.symbol : "USD" }}</span
+          >
         </div>
       </div>
 
@@ -77,12 +77,16 @@
         :colors="['orange']"
         :min="min"
         :max="max"
-        :data="history.map(h => [h.date, parseFloat(h.priceUsd).toFixed(2)])"
+        :data="history.map((h) => [h.date, parseFloat(h.priceUsd).toFixed(2)])"
       />
 
-      <h3 class="text-xl my-10">Mejores Ofertas de Cambio</h3>
+      <h3 class="text-xl my-10">{{ $t('Best Exchange Offers') }}</h3>
       <table>
-        <tr v-for="m in markets" :key="`${m.exchangeId}-${m.priceUsd}`" class="border-b">
+        <tr
+          v-for="m in markets"
+          :key="`${m.exchangeId}-${m.priceUsd}`"
+          class="border-b"
+        >
           <td>
             <b>{{ m.exchangeId }}</b>
           </td>
@@ -94,10 +98,12 @@
               v-if="!m.url"
               @custom-click="getWebSite(m)"
             >
-              <slot>Obtener Link</slot>
+              <slot>{{ $t('Get Link') }}</slot>
             </px-button>
 
-            <a v-else class="hover:underline text-green-600" target="_blanck">{{ m.url }}</a>
+            <a v-else class="hover:underline text-green-600" target="_blanck">{{
+              m.url
+            }}</a>
           </td>
         </tr>
       </table>
@@ -106,11 +112,11 @@
 </template>
 
 <script>
-import api from '@/api'
-import PxButton from '@/components/PxButton'
+import api from "@/api";
+import PxButton from "@/components/PxButton";
 
 export default {
-  name: 'CoinDetail',
+  name: "CoinDetail",
 
   components: { PxButton },
 
@@ -120,84 +126,84 @@ export default {
       asset: {},
       history: [],
       markets: [],
-      fromUsd:true,
-      convertValue: null
-    }
+      fromUsd: true,
+      convertValue: null,
+    };
   },
 
   computed: {
-    convertResult(){
-      if(!this.convertValue){
-        return 0
+    convertResult() {
+      if (!this.convertValue) {
+        return 0;
       }
-      const result = this.fromUsd 
-      ?this.convertValue/this.asset.priceUsd
-      : this.convertValue*this.asset.priceUsd
-      return result.toFixed(4)
+      const result = this.fromUsd
+        ? this.convertValue / this.asset.priceUsd
+        : this.convertValue * this.asset.priceUsd;
+      return result.toFixed(4);
     },
     min() {
       return Math.min(
-        ...this.history.map(h => parseFloat(h.priceUsd).toFixed(2))
-      )
+        ...this.history.map((h) => parseFloat(h.priceUsd).toFixed(2))
+      );
     },
 
     max() {
       return Math.max(
-        ...this.history.map(h => parseFloat(h.priceUsd).toFixed(2))
-      )
+        ...this.history.map((h) => parseFloat(h.priceUsd).toFixed(2))
+      );
     },
 
     avg() {
       return Math.abs(
-        ...this.history.map(h => parseFloat(h.priceUsd).toFixed(2))
-      )
-    }
+        ...this.history.map((h) => parseFloat(h.priceUsd).toFixed(2))
+      );
+    },
   },
   watch: {
-    $route(){
-      this.getCoin()
-    }
+    $route() {
+      this.getCoin();
+    },
   },
 
   created() {
-    this.getCoin()
+    this.getCoin();
   },
 
   methods: {
-    toggleConverter(){
-      this.fromUsd =!this.fromUsd
+    toggleConverter() {
+      this.fromUsd = !this.fromUsd;
     },
     getWebSite(exchange) {
-      this.$set(exchange, 'isLoading', true)
+      this.$set(exchange, "isLoading", true);
 
       return api
         .getExchange(exchange.exchangeId)
-        .then(res => {
-          this.$set(exchange, 'url', res.exchangeUrl)
+        .then((res) => {
+          this.$set(exchange, "url", res.exchangeUrl);
         })
         .finally(() => {
-          this.$set(exchange, 'isLoading', false)
-        })
+          this.$set(exchange, "isLoading", false);
+        });
     },
 
     getCoin() {
-      const id = this.$route.params.id
-      this.isLoading = true
+      const id = this.$route.params.id;
+      this.isLoading = true;
 
       Promise.all([
         api.getAsset(id),
         api.getAssetHistory(id),
-        api.getMarkets(id)
+        api.getMarkets(id),
       ])
         .then(([asset, history, markets]) => {
-          this.asset = asset
-          this.history = history
-          this.markets = markets
+          this.asset = asset;
+          this.history = history;
+          this.markets = markets;
         })
-        .finally(() => (this.isLoading = false))
-    }
-  }
-}
+        .finally(() => (this.isLoading = false));
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -206,3 +212,20 @@ td {
   text-align: center;
 }
 </style>
+<i18n>
+{
+  "es": {
+    "Ranking":"Clasificación",
+    "Market Capital": "Capital de Mercado",
+    "Actual Price":"Precio actual",
+    "Variation 24hs":"Variacion 24hs",
+    "Lowest Price":"Precio más bajo",
+    "Hightest Price":"Precio más alto",
+    "Average Price":"Precio Promedio",
+    "Value in":"Valor en ",
+    "Best Exchange Offers":"Mejores Ofertas de Cambio",
+    "Get Link":"Obtener enlace"
+  }
+}
+</i18n>
+
