@@ -58,11 +58,5 @@ export default {
 };
 </script>
 
-<i18n>
-{
-  "es": {
-    "About": "Acerca de"
-  }
-}
-</i18n>
+
 
