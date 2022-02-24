@@ -13,7 +13,7 @@
         <div
           class="hidden sm:block w-full block flex-grow lg:flex lg:items-center lg:w-auto"
         >
-          <div class="text-sm lg:flex-grow">
+          <div class="text-lg lg:flex-grow">
             <router-link
               v-for="l in links"
               :key="l.title"
@@ -23,7 +23,7 @@
             >
           </div>
           
-          <div class="locale-changer text-lg">
+          <div class="locale-changer text-lg mr-4">
               <select v-model="$i18n.locale" >
                 <option v-for="(lang, i) in langs" :key="`Lang${i}`" :value="lang">{{ lang }}</option>
               </select>
